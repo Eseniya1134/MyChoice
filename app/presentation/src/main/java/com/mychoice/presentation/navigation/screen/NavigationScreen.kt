@@ -35,6 +35,10 @@ fun NavigationScreen(
                 NewsNavigationScreen()
             }
 
+            composable(NavigationBottomModel.Rating.route) {
+                RatingNavigationScreen()
+            }
+
             composable(NavigationBottomModel.Discussions.route) {
                 DiscussionsNavigationScreen()
             }
@@ -43,6 +47,16 @@ fun NavigationScreen(
                 SettingsNavigationScreen()
             }
         }
+    }
+}
+
+@Composable
+fun RatingNavigationScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = "Рейтинг")
     }
 }
 
