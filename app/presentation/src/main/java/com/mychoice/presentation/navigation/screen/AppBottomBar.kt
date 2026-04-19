@@ -42,7 +42,6 @@ fun AppBottomBar(navController: NavHostController) {
     val selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     val navIcons = mapOf(
-
         NavigationBottomModel.News.route to Icons.Default.Article,
         NavigationBottomModel.Search.route to Icons.Default.Search,
         NavigationBottomModel.Rating.route to Icons.Default.Leaderboard,
@@ -66,7 +65,7 @@ fun AppBottomBar(navController: NavHostController) {
                 .background(barColor)
         )
 
-        // ИКОНКИ (поверх, без clip!)
+        // ИКОНКИ (поверх)
         Row(
             modifier = Modifier
                 .fillMaxWidth()

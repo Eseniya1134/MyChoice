@@ -10,12 +10,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-
 import com.mychoice.presentation.navigation.model.NavigationBottomModel
+import com.mychoice.auth.presentation.authNavGraph
+
+@Composable
+fun NavigationScreen(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(
+        navController = navController,
+        //startDestination = "auth"
+        startDestination = "main"
+    ) {
+        authNavGraph(
+            navController = navController,
+            onAuthSuccess = {
+                navController.navigate("main") {
+                    popUpTo("auth") { inclusive = true }
+                }
+            }
+        )
+
+        composable("main") {
+            MainScreen()
+        }
+    }
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationScreen(
+fun MainScreen(
     navController: NavHostController = rememberNavController()
 ) {
     Scaffold(
@@ -23,79 +47,48 @@ fun NavigationScreen(
     ) {
         NavHost(
             navController = navController,
-            startDestination = NavigationBottomModel.Search.route,
-            modifier = Modifier
+            startDestination = NavigationBottomModel.Search.route
         ) {
-
-            composable(NavigationBottomModel.Search.route) {
-                SearchNavigationScreen()
-            }
-
-            composable(NavigationBottomModel.News.route) {
-                NewsNavigationScreen()
-            }
-
-            composable(NavigationBottomModel.Rating.route) {
-                RatingNavigationScreen()
-            }
-
-            composable(NavigationBottomModel.Discussions.route) {
-                DiscussionsNavigationScreen()
-            }
-
-            composable(NavigationBottomModel.Settings.route) {
-                SettingsNavigationScreen()
-            }
+            composable(NavigationBottomModel.Search.route) { SearchNavigationScreen() }
+            composable(NavigationBottomModel.News.route) { NewsNavigationScreen() }
+            composable(NavigationBottomModel.Rating.route) { RatingNavigationScreen() }
+            composable(NavigationBottomModel.Discussions.route) { DiscussionsNavigationScreen() }
+            composable(NavigationBottomModel.Settings.route) { SettingsNavigationScreen() }
         }
     }
 }
 
 @Composable
 fun RatingNavigationScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Рейтинг")
     }
 }
 
 @Composable
 fun SettingsNavigationScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Настройки")
     }
 }
 
 @Composable
 fun DiscussionsNavigationScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Дискуссии")
     }
 }
 
 @Composable
 fun NewsNavigationScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Новости")
     }
 }
 
 @Composable
 fun SearchNavigationScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Вузы")
     }
 }
