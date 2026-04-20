@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation(project(":feature:auth:presentation"))
+    implementation(project(":feature:settings:presentation"))
 }

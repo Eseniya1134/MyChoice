@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.mychoice.presentation.navigation.model.NavigationBottomModel
 import com.mychoice.auth.presentation.authNavGraph
+import com.mychoice.settings.presentation.settingsGraph
 
 @Composable
 fun NavigationScreen(
@@ -30,6 +31,8 @@ fun NavigationScreen(
                 }
             }
         )
+
+
 
         composable("main") {
             MainScreen()
@@ -53,7 +56,7 @@ fun MainScreen(
             composable(NavigationBottomModel.News.route) { NewsNavigationScreen() }
             composable(NavigationBottomModel.Rating.route) { RatingNavigationScreen() }
             composable(NavigationBottomModel.Discussions.route) { DiscussionsNavigationScreen() }
-            composable(NavigationBottomModel.Settings.route) { SettingsNavigationScreen() }
+            settingsGraph(navController)
         }
     }
 }
@@ -65,12 +68,6 @@ fun RatingNavigationScreen() {
     }
 }
 
-@Composable
-fun SettingsNavigationScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Настройки")
-    }
-}
 
 @Composable
 fun DiscussionsNavigationScreen() {
