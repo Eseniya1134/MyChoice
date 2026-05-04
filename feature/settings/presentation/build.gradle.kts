@@ -59,6 +59,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.coil.compose)
 
+    // модуль профиля
+    implementation(project(":feature:profile:presentation"))
+
     // Material3
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material.icons.extended)
