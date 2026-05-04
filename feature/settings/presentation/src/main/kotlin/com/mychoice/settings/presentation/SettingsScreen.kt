@@ -1,5 +1,6 @@
 package com.mychoice.settings.presentation
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,19 +10,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 
 @Composable
@@ -31,7 +35,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
 
     Column(
         modifier = Modifier
@@ -54,22 +57,50 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SettingsToggleItem(
+                icon     = Icons.Default.LightMode,
+                iconTint = MaterialTheme.colorScheme.primary,
                 title    = "Светлая тема",
                 checked  = uiState.isLightTheme,
                 onToggle = { viewModel.toggleTheme(it) }
             )
             SettingsNavigationItem(
+                icon     = Icons.Default.Language,
+                iconTint = MaterialTheme.colorScheme.tertiary,
                 title    = "Язык",
                 subtitle = uiState.selectedLanguage,
                 onClick  = { viewModel.onLanguageClick() }
             )
-            SettingsNavigationItem(title = "Уведомления",       onClick = {})
-            SettingsNavigationItem(title = "Конфиденциальность", onClick = {})
-            SettingsNavigationItem(title = "О приложении",       onClick = {})
             SettingsNavigationItem(
-                title   = "Выйти",
-                tintRed = true,
-                onClick = { viewModel.onLogout() }
+                icon     = Icons.Default.Notifications,
+                iconTint = MaterialTheme.colorScheme.secondary,
+                title    = "Уведомления",
+                onClick  = {}
+            )
+            SettingsNavigationItem(
+                icon     = Icons.Default.Lock,
+                iconTint = MaterialTheme.colorScheme.primary,
+                title    = "Конфиденциальность",
+                onClick  = {}
+            )
+            SettingsNavigationItem(
+                icon     = Icons.Default.Info,
+                iconTint = MaterialTheme.colorScheme.secondary,
+                title    = "О приложении",
+                onClick  = {}
+            )
+            SettingsNavigationItem(
+                icon     = Icons.Default.HelpOutline,
+                iconTint = MaterialTheme.colorScheme.tertiary,
+                title    = "FAQ",
+                subtitle = "Частые вопросы",
+                onClick  = {}
+            )
+            SettingsNavigationItem(
+                icon     = Icons.AutoMirrored.Filled.Logout,
+                iconTint = MaterialTheme.colorScheme.error,
+                title    = "Выйти",
+                tintRed  = true,
+                onClick  = { viewModel.onLogout() }
             )
         }
     }
@@ -85,48 +116,78 @@ private fun ProfileHeader(
     onHeaderClick: () -> Unit,
     onEditProfileClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
+    val gradientColors = listOf(
+        MaterialTheme.colorScheme.primary,
+        MaterialTheme.colorScheme.secondary,
+        MaterialTheme.colorScheme.primaryContainer
+    )
+
+    Card(
+        shape     = RoundedCornerShape(14.dp),
+        modifier  = Modifier
             .fillMaxWidth()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.primaryContainer
+            .clickable { onHeaderClick() }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        border    = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        elevation = CardDefaults.cardElevation(0.dp),
+        colors    = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = gradientColors,
+                        start  = androidx.compose.ui.geometry.Offset(0f, 0f),
+                        end    = androidx.compose.ui.geometry.Offset(
+                            Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY
+                        )
                     )
                 )
-            )
-            .clickable { onHeaderClick() }
-            .padding(horizontal = 20.dp, vertical = 24.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 24.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Аватар
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .background(
-                            MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)
-                        ),
-                    contentAlignment = Alignment.Center
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier          = Modifier.fillMaxWidth()
                 ) {
-                    if (avatarUrl != null) {
-                        AsyncImage(
-                            model              = avatarUrl,
-                            contentDescription = "Аватар",
-                            contentScale       = ContentScale.Crop,
-                            modifier           = Modifier.fillMaxSize()
-                        )
-                    } else {
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (avatarUrl != null) {
+                            AsyncImage(
+                                model              = avatarUrl,
+                                contentDescription = "Аватар",
+                                contentScale       = ContentScale.Crop,
+                                modifier           = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            Text(
+                                text       = username.take(2).uppercase(),
+                                color      = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize   = 22.sp
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.width(16.dp))
+
+                    Column {
                         Text(
-                            text       = username.take(2).uppercase(),
+                            text     = "@$handle",
+                            color    = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                            fontSize = 13.sp
+                        )
+                        Text(
+                            text       = username,
                             color      = MaterialTheme.colorScheme.onPrimary,
                             fontWeight = FontWeight.Bold,
                             fontSize   = 22.sp
@@ -134,58 +195,42 @@ private fun ProfileHeader(
                     }
                 }
 
-                Spacer(Modifier.width(16.dp))
+                Spacer(Modifier.height(20.dp))
 
-                Column {
-                    Text(
-                        text     = "@$handle",
-                        color    = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
-                        fontSize = 13.sp
+                Button(
+                    onClick   = { onEditProfileClick() },
+                    modifier  = Modifier.fillMaxWidth().height(44.dp),
+                    shape     = RoundedCornerShape(22.dp),
+                    colors    = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
+                        contentColor   = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(0.dp),
+                    border    = BorderStroke(
+                        1.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f)
                     )
-                    Text(
-                        text       = username,
-                        color      = MaterialTheme.colorScheme.onPrimary,
-                        fontWeight = FontWeight.Bold,
-                        fontSize   = 22.sp
-                    )
+                ) {
+                    Text("Редактировать", fontSize = 15.sp, fontWeight = FontWeight.Medium)
                 }
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            Button(
-                onClick   = { onEditProfileClick() },
-                modifier  = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp),
-                shape     = RoundedCornerShape(22.dp),
-                colors    = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor   = MaterialTheme.colorScheme.onSecondary
-                ),
-                elevation = ButtonDefaults.buttonElevation(0.dp)
-            ) {
-                Text(
-                    text       = "Редактировать",
-                    fontSize   = 15.sp,
-                    fontWeight = FontWeight.Medium
-                )
             }
         }
     }
 }
 
-// Тоггл
+// Тоггл с иконкой
 
 @Composable
 private fun SettingsToggleItem(
+    icon: ImageVector,
+    iconTint: Color,
     title: String,
     checked: Boolean,
     onToggle: (Boolean) -> Unit
 ) {
     Surface(
         shape    = RoundedCornerShape(14.dp),
-        color    = MaterialTheme.colorScheme.surfaceContainer,
+        color    = MaterialTheme.colorScheme.surfaceContainerLow,
+        border   = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -194,12 +239,21 @@ private fun SettingsToggleItem(
                 .padding(horizontal = 16.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Иконка в цветном кружке
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(36.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            )
+                    .background(iconTint.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector        = icon,
+                    contentDescription = null,
+                    tint               = iconTint,
+                    modifier           = Modifier.size(20.dp)
+                )
+            }
             Spacer(Modifier.width(12.dp))
             Text(
                 text     = title,
@@ -221,10 +275,12 @@ private fun SettingsToggleItem(
     }
 }
 
-//  Пункт со стрелкой
+// Пункт со стрелкой и иконкой
 
 @Composable
 private fun SettingsNavigationItem(
+    icon: ImageVector,
+    iconTint: Color,
     title: String,
     subtitle: String? = null,
     tintRed: Boolean = false,
@@ -232,7 +288,8 @@ private fun SettingsNavigationItem(
 ) {
     Surface(
         shape    = RoundedCornerShape(14.dp),
-        color    = MaterialTheme.colorScheme.surfaceContainer,
+        color    = MaterialTheme.colorScheme.surfaceContainerLow,
+        border   = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
@@ -240,15 +297,24 @@ private fun SettingsNavigationItem(
         Row(
             modifier          = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Иконка в цветном кружке
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(36.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            )
+                    .background(iconTint.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector        = icon,
+                    contentDescription = null,
+                    tint               = iconTint,
+                    modifier           = Modifier.size(20.dp)
+                )
+            }
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -268,19 +334,19 @@ private fun SettingsNavigationItem(
             Icon(
                 imageVector        = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint               = MaterialTheme.colorScheme.primary,
+                tint               = if (tintRed) MaterialTheme.colorScheme.error
+                else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier           = Modifier.size(22.dp)
             )
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
     SettingsScreen(
-        onNavigateToProfile = {},
+        onNavigateToProfile     = {},
         onNavigateToEditProfile = {}
     )
 }
