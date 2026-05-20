@@ -21,12 +21,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.mychoice.resources.R
+import android.util.Log
+
 
 @Composable
 fun SettingsScreen(
@@ -36,16 +40,28 @@ fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(uiState.selectedLanguage) {
+        Log.d("LANG_DEBUG", "UI LANGUAGE NOW: ${uiState.selectedLanguage}")
+    }
+
+    if (uiState.showLanguageDialog) {
+        LanguagePickerDialog(
+            currentLanguage = uiState.selectedLanguage,
+            onSelect = { viewModel.onLanguageSelected(it) },
+            onDismiss = { viewModel.onLanguageDialogDismiss() }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         ProfileHeader(
-            username           = uiState.username,
-            handle             = uiState.handle,
-            avatarUrl          = uiState.avatarUrl,
-            onHeaderClick      = onNavigateToProfile,
+            username = uiState.username,
+            handle = uiState.handle,
+            avatarUrl = uiState.avatarUrl,
+            onHeaderClick = onNavigateToProfile,
             onEditProfileClick = onNavigateToEditProfile
         )
 
@@ -56,54 +72,136 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
             SettingsToggleItem(
-                icon     = Icons.Default.LightMode,
+                icon = if (uiState.isLightTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
                 iconTint = MaterialTheme.colorScheme.primary,
-                title    = "Светлая тема",
-                checked  = uiState.isLightTheme,
+                title = if (uiState.isLightTheme)
+                    stringResource(R.string.theme_light)
+                else
+                    stringResource(R.string.theme_dark),
+                checked = uiState.isLightTheme,
                 onToggle = { viewModel.toggleTheme(it) }
             )
+
             SettingsNavigationItem(
-                icon     = Icons.Default.Language,
+                icon = Icons.Default.Language,
                 iconTint = MaterialTheme.colorScheme.tertiary,
-                title    = "Язык",
+                title = stringResource(R.string.language),
                 subtitle = uiState.selectedLanguage,
-                onClick  = { viewModel.onLanguageClick() }
+                onClick = { viewModel.onLanguageClick() }
             )
+
             SettingsNavigationItem(
-                icon     = Icons.Default.Notifications,
+                icon = Icons.Default.Notifications,
                 iconTint = MaterialTheme.colorScheme.secondary,
-                title    = "Уведомления",
-                onClick  = {}
+                title = stringResource(R.string.notifications),
+                onClick = {}
             )
+
             SettingsNavigationItem(
-                icon     = Icons.Default.Lock,
+                icon = Icons.Default.Lock,
                 iconTint = MaterialTheme.colorScheme.primary,
-                title    = "Конфиденциальность",
-                onClick  = {}
+                title = stringResource(R.string.privacy),
+                onClick = {}
             )
+
             SettingsNavigationItem(
-                icon     = Icons.Default.Info,
+                icon = Icons.Default.Info,
                 iconTint = MaterialTheme.colorScheme.secondary,
-                title    = "О приложении",
-                onClick  = {}
+                title = stringResource(R.string.about_app),
+                onClick = {}
             )
+
             SettingsNavigationItem(
-                icon     = Icons.Default.HelpOutline,
+                icon = Icons.Default.HelpOutline,
                 iconTint = MaterialTheme.colorScheme.tertiary,
-                title    = "FAQ",
-                subtitle = "Частые вопросы",
-                onClick  = {}
+                title = stringResource(R.string.faq),
+                subtitle = stringResource(R.string.faq_subtitle),
+                onClick = {}
             )
+
             SettingsNavigationItem(
-                icon     = Icons.AutoMirrored.Filled.Logout,
+                icon = Icons.AutoMirrored.Filled.Logout,
                 iconTint = MaterialTheme.colorScheme.error,
-                title    = "Выйти",
-                tintRed  = true,
-                onClick  = { viewModel.onLogout() }
+                title = stringResource(R.string.logout),
+                tintRed = true,
+                onClick = { viewModel.onLogout() }
             )
         }
     }
+}
+
+// Диалог выбора языка
+@Composable
+private fun LanguagePickerDialog(
+    currentLanguage: String,
+    onSelect: (AppLanguage) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(20.dp),
+        title = {
+            Text(
+                text = stringResource(R.string.choose_language),
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                AppLanguage.entries.forEach { lang ->
+                    val isSelected = lang.displayName == currentLanguage
+
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else Color.Transparent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(lang) }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = if (lang == AppLanguage.RUSSIAN) "🇷🇺" else "🇬🇧",
+                                    fontSize = 22.sp
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    text = lang.displayName,
+                                    fontSize = 15.sp,
+                                    fontWeight = if (isSelected)
+                                        FontWeight.SemiBold
+                                    else FontWeight.Normal
+                                )
+                            }
+
+                            if (isSelected) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 
 // Шапка

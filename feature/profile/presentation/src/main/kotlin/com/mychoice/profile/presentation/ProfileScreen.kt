@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material3.*
@@ -20,45 +18,58 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 
 @Composable
 fun ProfileScreen(
-    onNavigateToSettings: () -> Unit,   //настройки
+    onNavigateToSettings: () -> Unit,
     onNavigateToEdit: () -> Unit,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // Шапка профиля (структура как в SettingsScreen)
-        ProfileCard(
-            username           = uiState.username,
-            handle             = uiState.handle,
-            avatarUrl          = uiState.avatarUrl,
-            onNavigateToEdit   = onNavigateToEdit
-        )
+    when {
+        uiState.isLoading -> {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        uiState.errorMessage != null -> {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text  = uiState.errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ProfileCard(
+                    username         = uiState.username,
+                    handle           = uiState.handle,
+                    avatarUrl        = uiState.avatarUrl,
+                    onNavigateToEdit = onNavigateToEdit
+                )
 
-        // Карточка с инфо (вертикально)
-        ProfileInfoCard(
-            email = uiState.email,
-            city  = uiState.city,
-            age   = uiState.age
-        )
+                ProfileInfoCard(
+                    email = uiState.email,
+                    city  = uiState.city,
+                    age   = uiState.age
+                )
+            }
+        }
     }
 }
 
-// Шапка — структура как в SettingsScreen, цвета текущие
 @Composable
 private fun ProfileCard(
     username: String,
@@ -69,27 +80,16 @@ private fun ProfileCard(
     Card(
         shape     = RoundedCornerShape(16.dp),
         modifier  = Modifier.fillMaxWidth(),
-        colors    = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
-        border    = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant
-        ),
+        colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        border    = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(
-            modifier            = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally  // всё по центру
+            modifier            = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Аватар — большой, по центру
             Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                modifier         = Modifier.size(120.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 if (avatarUrl != null) {
@@ -111,51 +111,26 @@ private fun ProfileCard(
 
             Spacer(Modifier.height(12.dp))
 
-            // ФИО под аватаркой
-            Text(
-                text       = username,
-                fontWeight = FontWeight.Bold,
-                fontSize   = 20.sp,
-                color      = MaterialTheme.colorScheme.onSurface
-            )
+            Text(text = username, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = MaterialTheme.colorScheme.onSurface)
 
             Spacer(Modifier.height(4.dp))
 
-            // Ник под именем
-            Text(
-                text     = "@$handle",
-                fontSize = 13.sp,
-                color    = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-
+            Text(text = "@$handle", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
 
-// Карточка с инфо — вертикально
-
 @Composable
-private fun ProfileInfoCard(
-    email: String,
-    city: String,
-    age: String
-) {
+private fun ProfileInfoCard(email: String, city: String, age: String) {
     Card(
         shape     = RoundedCornerShape(16.dp),
         modifier  = Modifier.fillMaxWidth(),
-        colors    = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
-        border    = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant
-        ),
+        colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        border    = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(
-            modifier            = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier            = Modifier.fillMaxWidth().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             InfoItem(icon = Icons.Default.Mail,          label = "Электронная почта", value = email)
@@ -165,43 +140,14 @@ private fun ProfileInfoCard(
     }
 }
 
-// Элемент инфо
-
 @Composable
-private fun InfoItem(
-    icon: ImageVector,
-    label: String,
-    value: String
-) {
+private fun InfoItem(icon: ImageVector, label: String, value: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            imageVector        = icon,
-            contentDescription = null,
-            modifier           = Modifier.size(20.dp),
-            tint               = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         Spacer(Modifier.width(12.dp))
         Column {
-            Text(
-                text     = label,
-                fontSize = 11.sp,
-                color    = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text       = value,
-                fontWeight = FontWeight.Medium,
-                fontSize   = 14.sp,
-                color      = MaterialTheme.colorScheme.onSurface
-            )
+            Text(text = label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(text = value, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    ProfileScreen(
-        onNavigateToSettings = {},
-        onNavigateToEdit     = {}
-    )
 }

@@ -29,7 +29,7 @@ abstract class AuthModule {
 
         // TODO:  BASE_URL в BuildConfig или local.properties
         //private const val BASE_URL = "http://10.0.2.2:8081"
-        private const val BASE_URL = "http://192.168.0.100:8081"
+        private const val BASE_URL = " https://unhygienically-fluxional-sharolyn.ngrok-free.dev"
 
         @Provides
         @Singleton

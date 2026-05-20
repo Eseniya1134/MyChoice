@@ -4,41 +4,42 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.os.LocaleListCompat
 import com.mychoice.mychoiceapplication.ui.theme.MyChoiceApplicationTheme
 import com.mychoice.presentation.navigation.screen.NavigationScreen
+import com.mychoice.settings.presentation.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
-            MyChoiceApplicationTheme {
+            val settingsViewModel: SettingsViewModel = viewModel()
+            val uiState by settingsViewModel.uiState.collectAsState()
+
+            LaunchedEffect(Unit) {
+                settingsViewModel.restartApp.collect {
+                    recreate()
+                }
+            }
+
+            MyChoiceApplicationTheme(
+                darkTheme = !uiState.isLightTheme
+            ) {
                 NavigationScreen()
             }
         }
-    }
-}
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyChoiceApplicationTheme {
-        Greeting("Android")
     }
 }

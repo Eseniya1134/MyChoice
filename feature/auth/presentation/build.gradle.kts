@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
+    implementation(project(":core:network"))
     ksp(libs.hilt.compiler)
 
     implementation(libs.lifecycle.viewmodel.ktx)

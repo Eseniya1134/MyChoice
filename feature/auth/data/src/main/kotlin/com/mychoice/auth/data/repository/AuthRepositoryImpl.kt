@@ -8,7 +8,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
 
-    override suspend fun login(email: String, password: String): String =
+    override suspend fun login(email: String, password: String): Pair<String, String> =
         remoteDataSource.login(email, password)
 
     override suspend fun register(
@@ -19,5 +19,5 @@ class AuthRepositoryImpl @Inject constructor(
         age: Int,
         city: String,
         role: String?
-    ): String = remoteDataSource.register(email, password, firstName, lastName, age, city, role)
+    ) = remoteDataSource.register(email, password, firstName, lastName, age, city, role)
 }

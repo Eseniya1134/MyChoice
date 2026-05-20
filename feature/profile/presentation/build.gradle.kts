@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mychoice.presentation"
+    namespace = "com.mychoice.profile.presentation"
     compileSdk = 36
 
     defaultConfig {
@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.tv.material)
+    implementation(libs.androidx.camera.camera2.pipe)
 
     // Compose BOM
     val composeBom = platform(libs.androidx.compose.bom)
@@ -88,6 +89,10 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
+
+    // Модули
+    implementation(project(":feature:profile:domain"))
+    implementation(project(":core:network"))
 
     // Тесты
     testImplementation(libs.junit)

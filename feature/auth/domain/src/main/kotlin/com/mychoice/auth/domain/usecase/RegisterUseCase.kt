@@ -14,7 +14,7 @@ class RegisterUseCase @Inject constructor(
         age: Int,
         city: String,
         role: String?
-    ): Result<String> = runCatching {
+    ): Result<Unit> = runCatching {
         repository.register(email, password, firstName, lastName, age, city, role)
     }
 }

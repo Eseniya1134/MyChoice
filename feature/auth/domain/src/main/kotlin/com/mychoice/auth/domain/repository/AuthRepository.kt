@@ -1,14 +1,11 @@
 package com.mychoice.auth.domain.repository
 
-/**
- * Контракт авторизации. Data-слой реализует, domain/presentation только знают об интерфейсе.
- */
 interface AuthRepository {
 
-    /** Возвращает JWT-токен при успехе, либо бросает исключение. */
-    suspend fun login(email: String, password: String): String
+    /** Возвращает Pair(token, userId) при успехе */
+    suspend fun login(email: String, password: String): Pair<String, String>
 
-    /** Возвращает токен после регистрации, либо бросает исключение. */
+    /** Просто регистрирует пользователя, токен не возвращает */
     suspend fun register(
         email: String,
         password: String,
@@ -17,5 +14,5 @@ interface AuthRepository {
         age: Int,
         city: String,
         role: String?
-    ): String
+    )
 }

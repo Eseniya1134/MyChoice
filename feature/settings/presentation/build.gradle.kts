@@ -45,6 +45,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.androidx.camera.camera2.pipe)
 
     // Compose BOM
     val composeBom = platform(libs.androidx.compose.bom)
@@ -61,6 +64,8 @@ dependencies {
 
     // модуль профиля
     implementation(project(":feature:profile:presentation"))
+    implementation(project(":core:resources"))
+    implementation(libs.androidx.appcompat)
 
     // Material3
     implementation(libs.androidx.compose.material3)
@@ -88,6 +93,8 @@ dependencies {
 
     // Runtime
     implementation(libs.androidx.compose.runtime)
+
+    implementation(libs.androidx.datastore.preferences)
 
     // Тесты
     testImplementation(libs.junit)

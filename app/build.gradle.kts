@@ -2,9 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)        // ← добавить
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    // ❌ kotlin("kapt") — убрать
 }
 
 android {
@@ -54,11 +53,17 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)       // ← kapt → ksp
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.ui.text)
+    implementation(libs.androidx.runtime)
+    ksp(libs.hilt.compiler)
 
     // Auth модули
     implementation(project(":feature:auth:di"))
     implementation(project(":feature:auth:presentation"))
+    implementation(project(":feature:profile:di"))
+    implementation(project(":feature:profile:presentation"))
+    implementation(project(":feature:settings:presentation"))
 
     // существующий модуль
     implementation(project(":app:presentation"))

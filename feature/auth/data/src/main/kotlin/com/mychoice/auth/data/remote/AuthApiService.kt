@@ -19,15 +19,20 @@ data class RegisterRequest(
     val role: String?
 )
 
+data class AuthResponse(
+    val token: String,
+    val userId: Long
+)
+
 interface AuthApiService {
 
     @POST("/api/auth/login")
     suspend fun login(
         @Body request: LoginRequest
-    ): Response<Map<String, String>>
+    ): Response<AuthResponse>
 
     @POST("/api/auth/register")
     suspend fun register(
         @Body request: RegisterRequest
-    ): Response<Map<String, String>>
+    ): Response<AuthResponse>
 }

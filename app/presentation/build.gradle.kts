@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.play.services.games)
+    implementation(libs.androidx.ui)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
@@ -65,4 +66,5 @@ dependencies {
 
     implementation(project(":feature:auth:presentation"))
     implementation(project(":feature:settings:presentation"))
+    implementation(project(":feature:settings"))
 }

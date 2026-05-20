@@ -6,6 +6,9 @@ import javax.inject.Inject
 class LoginUseCase @Inject constructor(
     private val repository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, password: String): Result<String> =
+    suspend operator fun invoke(
+        email: String,
+        password: String
+    ): Result<Pair<String, String>> =
         runCatching { repository.login(email, password) }
 }

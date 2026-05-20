@@ -58,12 +58,13 @@ class RegisterViewModel @Inject constructor(
                 role      = state.role?.apiValue
             )
                 .onSuccess {
+                    // регистрация прошла — переходим на Login
                     _uiState.update { it.copy(isLoading = false, isSuccess = true) }
                 }
                 .onFailure { error ->
                     _uiState.update {
                         it.copy(
-                            isLoading = false,
+                            isLoading    = false,
                             errorMessage = error.message ?: "Неизвестная ошибка"
                         )
                     }
@@ -75,13 +76,13 @@ class RegisterViewModel @Inject constructor(
 
     private fun validate(state: RegisterUiState, age: Int?): Boolean {
         val error = when {
-            state.firstName.isBlank()  -> "Введите имя"
-            state.lastName.isBlank()   -> "Введите фамилию"
-            state.email.isBlank()      -> "Введите email"
-            state.password.length < 6  -> "Пароль — минимум 6 символов"
-            age == null || age <= 0    -> "Введите корректный возраст"
-            state.city.isBlank()       -> "Введите город"
-            else                       -> null
+            state.firstName.isBlank() -> "Введите имя"
+            state.lastName.isBlank()  -> "Введите фамилию"
+            state.email.isBlank()     -> "Введите email"
+            state.password.length < 6 -> "Пароль — минимум 6 символов"
+            age == null || age <= 0   -> "Введите корректный возраст"
+            state.city.isBlank()      -> "Введите город"
+            else                      -> null
         }
         if (error != null) _uiState.update { it.copy(errorMessage = error) }
         return error == null

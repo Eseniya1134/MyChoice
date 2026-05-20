@@ -7,8 +7,10 @@ class AuthRemoteDataSource @Inject constructor(
     private val api: AuthApiService
 ) {
 
-    suspend fun login(email: String, password: String): String {
-        val response: Response<Map<String, String>> = api.login(LoginRequest(email, password))
+    suspend fun login(email: String, password: String): Pair<String, String> {
+        val response: Response<AuthResponse> = api.login(LoginRequest(email, password))
+        android.util.Log.d("AUTH", "login body: ${response.body()}")
+
         if (!response.isSuccessful) {
             val message = when (response.code()) {
                 401  -> "Неверный email или пароль"
@@ -17,8 +19,8 @@ class AuthRemoteDataSource @Inject constructor(
             }
             error(message)
         }
-        return response.body()?.get("token")
-            ?: error("Сервер не вернул токен")
+        val body = response.body() ?: error("Пустой ответ сервера")
+        return Pair(body.token, body.userId.toString())
     }
 
     suspend fun register(
@@ -29,10 +31,12 @@ class AuthRemoteDataSource @Inject constructor(
         age: Int,
         city: String,
         role: String?
-    ): String {
-        val response: Response<Map<String, String>> = api.register(
+    ) {
+        val response: Response<AuthResponse> = api.register(
             RegisterRequest(email, password, firstName, lastName, age, city, role)
         )
+        android.util.Log.d("AUTH", "register code: ${response.code()}, body: ${response.body()}")
+
         if (!response.isSuccessful) {
             val message = when (response.code()) {
                 409  -> "Пользователь с таким email уже существует"
@@ -41,7 +45,6 @@ class AuthRemoteDataSource @Inject constructor(
             }
             error(message)
         }
-        return response.body()?.get("token")
-            ?: error("Сервер не вернул токен")
+        // регистрация не возвращает токен — просто успех
     }
 }

@@ -3,6 +3,7 @@ package com.mychoice.auth.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mychoice.auth.domain.usecase.LoginUseCase
+import com.mychoice.network.TokenStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val tokenStorage: TokenStorage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -33,14 +35,15 @@ class LoginViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             loginUseCase(state.email.trim(), state.password)
-                .onSuccess { token ->
-                    // TODO: сохранить токен через TokenRepository / DataStore
+                .onSuccess { (token, userId) ->
+                    tokenStorage.saveToken(token)
+                    tokenStorage.saveUserId(userId)
                     _uiState.update { it.copy(isLoading = false, isSuccess = true) }
                 }
                 .onFailure { error ->
                     _uiState.update {
                         it.copy(
-                            isLoading = false,
+                            isLoading    = false,
                             errorMessage = error.message ?: "Неизвестная ошибка"
                         )
                     }
