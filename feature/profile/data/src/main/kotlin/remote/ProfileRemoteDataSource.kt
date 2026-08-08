@@ -11,7 +11,7 @@ class ProfileRemoteDataSource @Inject constructor(
 ) {
 
     suspend fun getMyProfile(userId: String): MyProfile {
-        val response: Response<MyProfileResponse> = api.getMyProfile(userId)
+        val response: Response<MyProfileResponse> = api.getMyProfile()
         if (!response.isSuccessful) {
             error("Ошибка загрузки профиля (${response.code()})")
         }
