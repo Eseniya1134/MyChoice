@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.mychoice.presentation.navigation.model.NavigationBottomModel
 import com.mychoice.auth.presentation.authNavGraph
+import com.mychoice.search.presentation.searchGraph
 import com.mychoice.settings.presentation.settingsGraph
 
 @Composable
@@ -21,8 +22,8 @@ fun NavigationScreen(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "auth"
-       // startDestination = "main"
+        //startDestination = "auth"
+        startDestination = "main"
     ) {
         authNavGraph(
             navController = navController,
@@ -51,13 +52,14 @@ fun MainScreen(
     ) {
         NavHost(
             navController = navController,
-            startDestination = NavigationBottomModel.Search.route
+            startDestination = "search_graph"
         ) {
-            composable(NavigationBottomModel.Search.route) { SearchNavigationScreen() }
+            //composable(NavigationBottomModel.Search.route) { SearchNavigationScreen() }
             composable(NavigationBottomModel.News.route) { NewsNavigationScreen() }
             composable(NavigationBottomModel.Rating.route) { RatingNavigationScreen() }
             composable(NavigationBottomModel.Discussions.route) { DiscussionsNavigationScreen() }
             settingsGraph(navController)
+            searchGraph(navController)
         }
     }
 }

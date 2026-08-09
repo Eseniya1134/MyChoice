@@ -64,6 +64,8 @@ dependencies {
     implementation(project(":feature:profile:di"))
     implementation(project(":feature:profile:presentation"))
     implementation(project(":feature:settings:presentation"))
+    implementation(project(":feature:search:di"))
+    implementation(project(":feature:search:presentation"))
 
     // существующий модуль
     implementation(project(":app:presentation"))

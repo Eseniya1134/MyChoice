@@ -1,4 +1,4 @@
-plugins {
+namespace = "com.mychoice.presentation"plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mychoice.settings.presentation"
+    namespace = "com.mychoice.presentation"
     compileSdk = 36
 
     defaultConfig {

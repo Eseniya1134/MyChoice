@@ -34,10 +34,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
 
     // Hilt — даёт javax.inject.Inject
     implementation(libs.hilt.android)
+    implementation(libs.material)
     ksp(libs.hilt.compiler)
 
     // Retrofit + Moshi

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mychoice.presentation"
+    namespace = "com.mychoice.app.presentation"
     compileSdk = 36
 
     defaultConfig {
@@ -66,5 +66,6 @@ dependencies {
 
     implementation(project(":feature:auth:presentation"))
     implementation(project(":feature:settings:presentation"))
+    implementation(project(":feature:search:presentation"))
     implementation(project(":feature:settings"))
 }
