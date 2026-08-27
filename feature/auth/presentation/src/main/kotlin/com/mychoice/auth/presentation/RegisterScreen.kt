@@ -22,13 +22,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mychoice.resources.R
 
 @Composable
 fun RegisterScreen(
@@ -38,6 +41,7 @@ fun RegisterScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
     var passwordVisible by remember { mutableStateOf(false) }
     var roleExpanded by remember { mutableStateOf(false) }
 
@@ -72,7 +76,7 @@ fun RegisterScreen(
                 AuthTextField(
                     value = state.firstName,
                     onValueChange = viewModel::onFirstNameChange,
-                    label = "Имя",
+                    label = stringResource(R.string.first_name_label),
                     icon = Icons.Outlined.Person,
                     iconTint = MaterialTheme.colorScheme.primary,
                     isError = false,
@@ -85,7 +89,7 @@ fun RegisterScreen(
                 AuthTextField(
                     value = state.lastName,
                     onValueChange = viewModel::onLastNameChange,
-                    label = "Фамилия",
+                    label = stringResource(R.string.last_name_label),
                     icon = Icons.Outlined.Badge,
                     iconTint = MaterialTheme.colorScheme.secondary,
                     isError = false,
@@ -100,7 +104,7 @@ fun RegisterScreen(
             AuthTextField(
                 value = state.email,
                 onValueChange = viewModel::onEmailChange,
-                label = "Email",
+                label = stringResource(R.string.email_label),
                 icon = Icons.Outlined.Email,
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 isError = false,
@@ -116,7 +120,7 @@ fun RegisterScreen(
             AuthTextField(
                 value = state.password,
                 onValueChange = viewModel::onPasswordChange,
-                label = "Пароль (минимум 6 символов)",
+                label = stringResource(R.string.password_hint_label),
                 icon = Icons.Outlined.Lock,
                 iconTint = MaterialTheme.colorScheme.primary,
                 isError = false,
@@ -149,7 +153,7 @@ fun RegisterScreen(
                 AuthTextField(
                     value = state.ageText,
                     onValueChange = viewModel::onAgeChange,
-                    label = "Возраст",
+                    label = stringResource(R.string.age_label),
                     icon = Icons.Outlined.DateRange,
                     iconTint = MaterialTheme.colorScheme.secondary,
                     isError = false,
@@ -165,7 +169,7 @@ fun RegisterScreen(
                 AuthTextField(
                     value = state.city,
                     onValueChange = viewModel::onCityChange,
-                    label = "Город",
+                    label = stringResource(R.string.city_label),
                     icon = Icons.Outlined.LocationOn,
                     iconTint = MaterialTheme.colorScheme.tertiary,
                     isError = false,
@@ -177,15 +181,16 @@ fun RegisterScreen(
                 )
             }
 
-            // Роль (необязательно)
+            // Роль (необязательно) - ИСПРАВЛЕНО!
             RoleDropdownField(
-                selected = state.role?.displayName,
+                selectedRole = state.role,
                 expanded = roleExpanded,
                 onExpandedChange = { roleExpanded = it },
-                onRoleSelected = {
-                    viewModel.onRoleChange(it)
+                onRoleSelected = { role ->
+                    viewModel.onRoleChange(role)
                     roleExpanded = false
-                }
+                },
+                context = context
             )
 
             AnimatedVisibility(visible = state.errorMessage != null) {
@@ -227,7 +232,7 @@ fun RegisterScreen(
                     )
                 } else {
                     Text(
-                        "Зарегистрироваться",
+                        stringResource(R.string.register_action),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -242,13 +247,13 @@ fun RegisterScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Уже есть аккаунт?",
+                    text = stringResource(R.string.already_have_account_question),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 TextButton(onClick = onGoToLogin) {
                     Text(
-                        "Войти",
+                        stringResource(R.string.login_action),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -292,6 +297,12 @@ private fun RegisterHeader() {
                 )
                 .padding(horizontal = 20.dp, vertical = 32.dp)
         ) {
+            LanguageToggleButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 8.dp, y = (-12).dp)
+            )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -314,14 +325,14 @@ private fun RegisterHeader() {
                 Spacer(Modifier.height(14.dp))
 
                 Text(
-                    text = "Регистрация",
+                    text = stringResource(R.string.register_title),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "Заполните данные для регистрации",
+                    text = stringResource(R.string.register_subtitle),
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                     fontSize = 13.sp,
                     textAlign = TextAlign.Center
@@ -331,13 +342,14 @@ private fun RegisterHeader() {
     }
 }
 
-// Поле выбора роли — в едином стиле с AuthTextField
+// Поле выбора роли — ИСПРАВЛЕНО!
 @Composable
 private fun RoleDropdownField(
-    selected: String?,
+    selectedRole: UserRole?,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onRoleSelected: (UserRole?) -> Unit
+    onRoleSelected: (UserRole?) -> Unit,
+    context: android.content.Context
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Surface(
@@ -373,12 +385,15 @@ private fun RoleDropdownField(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Роль (необязательно)",
+                        text = stringResource(R.string.role_label_optional),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = selected ?: "Не указано",
+                        // ✅ ИСПРАВЛЕНО: используем context.getString()
+                        text = selectedRole?.let {
+                            context.getString(it.displayNameRes)
+                        } ?: stringResource(R.string.role_not_specified),
                         fontSize = 15.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -400,14 +415,30 @@ private fun RoleDropdownField(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surfaceContainerLow)
         ) {
+            // Пункт "Не указывать"
             DropdownMenuItem(
-                text = { Text("Не указывать") },
-                onClick = { onRoleSelected(null) }
+                text = { Text(stringResource(R.string.role_do_not_specify)) },
+                onClick = {
+                    onRoleSelected(null)
+                    onExpandedChange(false)
+                }
             )
-            UserRole.entries.forEach { role ->
+
+            // Список ролей (без ADMIN)
+            listOf(
+                UserRole.ABITURIENT,
+                UserRole.BACHELOR,
+                UserRole.MASTER,
+                UserRole.POSTGRADUATE,
+                UserRole.TEACHER
+            ).forEach { role ->
                 DropdownMenuItem(
-                    text = { Text(role.displayName) },
-                    onClick = { onRoleSelected(role) }
+                    // ✅ ИСПРАВЛЕНО: используем context.getString()
+                    text = { Text(context.getString(role.displayNameRes)) },
+                    onClick = {
+                        onRoleSelected(role)
+                        onExpandedChange(false)
+                    }
                 )
             }
         }

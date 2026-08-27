@@ -1,8 +1,10 @@
 package com.mychoice.auth.presentation
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,12 +24,15 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mychoice.resources.R
 
 @Composable
 fun LoginScreen(
@@ -70,7 +75,7 @@ fun LoginScreen(
                 AuthTextField(
                     value = state.email,
                     onValueChange = viewModel::onEmailChange,
-                    label = "Email",
+                    label = stringResource(R.string.email_label),
                     icon = Icons.Outlined.Email,
                     iconTint = MaterialTheme.colorScheme.tertiary,
                     isError = state.errorMessage != null,
@@ -86,7 +91,7 @@ fun LoginScreen(
                 AuthTextField(
                     value = state.password,
                     onValueChange = viewModel::onPasswordChange,
-                    label = "Пароль",
+                    label = stringResource(R.string.password_label),
                     icon = Icons.Filled.Lock,
                     iconTint = MaterialTheme.colorScheme.primary,
                     isError = state.errorMessage != null,
@@ -151,7 +156,7 @@ fun LoginScreen(
                         )
                     } else {
                         Text(
-                            "Войти",
+                            stringResource(R.string.login_action),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -166,13 +171,13 @@ fun LoginScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Нет аккаунта?",
+                        text = stringResource(R.string.no_account_question),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     TextButton(onClick = onGoToRegister) {
                         Text(
-                            "Зарегистрироваться",
+                            stringResource(R.string.register_action),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -217,6 +222,12 @@ private fun LoginHeader() {
                 )
                 .padding(horizontal = 20.dp, vertical = 40.dp)
         ) {
+            LanguageToggleButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 8.dp, y = (-20).dp)
+            )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
@@ -239,18 +250,53 @@ private fun LoginHeader() {
                 Spacer(Modifier.height(16.dp))
 
                 Text(
-                    text = "Добро пожаловать",
+                    text = stringResource(R.string.login_welcome_title),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "Войдите в свой аккаунт",
+                    text = stringResource(R.string.login_welcome_subtitle),
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                     fontSize = 13.sp
                 )
             }
+        }
+    }
+}
+
+// Небольшая ненавязчивая кнопка переключения языка (RU/EN), видна в шапках Login/Register
+// internal — переиспользуется в RegisterScreen.kt
+@Composable
+internal fun LanguageToggleButton(modifier: Modifier = Modifier) {
+    var currentLanguage by remember {
+        mutableStateOf(
+            AppCompatDelegate.getApplicationLocales().get(0)?.language ?: "ru"
+        )
+    }
+
+    Surface(
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.35f)),
+        modifier = modifier
+            .size(36.dp)
+            .clickable {
+                val nextLanguage = if (currentLanguage == "ru") "en" else "ru"
+                currentLanguage = nextLanguage
+                AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(nextLanguage)
+                )
+            }
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = currentLanguage.uppercase(),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }

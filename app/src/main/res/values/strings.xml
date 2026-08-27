@@ -1,26 +1,3 @@
 <resources>
     <string name="app_name">UChoice</string>
-
-    <!-- GLOBAL -->
-    <string name="cancel">Отмена</string>
-
-    <!-- PROFILE -->
-    <string name="profile_title">Профиль</string>
-    <string name="email_label">Электронная почта</string>
-    <string name="city_label">Город</string>
-    <string name="age_label">Возраст</string>
-    <string name="edit_profile">Редактировать</string>
-    <string name="logout">Выйти</string>
-
-    <!-- SETTINGS -->
-    <string name="settings_title">Настройки</string>
-    <string name="theme_light">Светлая тема</string>
-    <string name="theme_dark">Тёмная тема</string>
-    <string name="language">Язык</string>
-    <string name="notifications">Уведомления</string>
-    <string name="privacy">Конфиденциальность</string>
-    <string name="about_app">О приложении</string>
-    <string name="faq">FAQ</string>
-    <string name="faq_subtitle">Частые вопросы</string>
-    <string name="choose_language">Выберите язык</string>
 </resources>

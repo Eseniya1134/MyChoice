@@ -64,6 +64,7 @@ dependencies {
 
     // Зависимости модулей
     implementation(project(":feature:search:domain"))
+    implementation(project(":core:resources"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

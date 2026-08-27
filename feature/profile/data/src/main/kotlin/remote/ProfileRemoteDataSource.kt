@@ -11,7 +11,7 @@ class ProfileRemoteDataSource @Inject constructor(
 ) {
 
     suspend fun getMyProfile(userId: String): MyProfile {
-        val response: Response<MyProfileResponse> = api.getMyProfile()
+        val response: Response<MyProfileResponse> = api.getMyProfile(userId)
         if (!response.isSuccessful) {
             error("Ошибка загрузки профиля (${response.code()})")
         }
@@ -25,16 +25,10 @@ class ProfileRemoteDataSource @Inject constructor(
         }
         return response.body()!!.toDomain()
     }
-    suspend fun getMyProfile(): MyProfile {
-        val response: Response<MyProfileResponse> = api.getMyProfile()
-        if (!response.isSuccessful) {
-            error("Ошибка загрузки профиля (${response.code()})")
-        }
-        return response.body()!!.toDomain()
-    }
 
     suspend fun updateProfile(userId: String, data: UpdateProfileData): MyProfile {
         val response: Response<MyProfileResponse> = api.updateProfile(
+            userId = userId,
             request = UpdateProfileRequest(
                 firstName = data.firstName,
                 lastName  = data.lastName,
@@ -47,6 +41,7 @@ class ProfileRemoteDataSource @Inject constructor(
         }
         return response.body()!!.toDomain()
     }
+
     private fun MyProfileResponse.toDomain() = MyProfile(
         username  = username,
         email     = email,

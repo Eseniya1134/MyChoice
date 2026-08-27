@@ -1,4 +1,6 @@
 package com.mychoice.auth.presentation
+import androidx.annotation.StringRes
+import com.mychoice.resources.R
 
 // Состояние экрана входа
 
@@ -27,11 +29,14 @@ data class RegisterUiState(
 
 // Роль (presentation-модель, только для UI)
 
-enum class UserRole(val displayName: String, val apiValue: String) {
-    ABITURIENT("Абитуриент", "ABITURIENT"),
-    BACHELOR("Бакалавр", "BACHELOR"),
-    MASTER("Магистр", "MASTER"),
-    POSTGRADUATE("Аспирант", "POSTGRADUATE"),
-    TEACHER("Преподаватель", "TEACHER"),
-    ADMIN("Администратор", "ADMIN")
+enum class UserRole(
+    @StringRes val displayNameRes: Int,
+    val apiValue: String
+) {
+    ABITURIENT(R.string.role_abiturient, "ABITURIENT"),
+    BACHELOR(R.string.role_bachelor, "BACHELOR"),
+    MASTER(R.string.role_master, "MASTER"),
+    POSTGRADUATE(R.string.role_postgraduate, "POSTGRADUATE"),
+    TEACHER(R.string.role_teacher, "TEACHER"),
+    ADMIN(R.string.role_admin, "ADMIN")
 }

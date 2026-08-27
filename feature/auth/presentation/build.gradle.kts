@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation(project(":feature:auth:domain"))
+    implementation(project(":core:resources"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.mychoice.presentation.navigation.model.NavigationBottomModel
 import com.mychoice.auth.presentation.authNavGraph
+import com.mychoice.presentation.rating.RatingScreen
 import com.mychoice.search.presentation.searchGraph
 import com.mychoice.settings.presentation.settingsGraph
 
@@ -22,8 +23,8 @@ fun NavigationScreen(
 ) {
     NavHost(
         navController = navController,
-        //startDestination = "auth"
-        startDestination = "main"
+        startDestination = "auth"
+        //startDestination = "main"
     ) {
         authNavGraph(
             navController = navController,
@@ -66,16 +67,14 @@ fun MainScreen(
 
 @Composable
 fun RatingNavigationScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Рейтинг")
-    }
+    RatingScreen()
 }
 
 
 @Composable
 fun DiscussionsNavigationScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Рейтинг")
+        Text(text = "Дискуссии")
     }
 }
 

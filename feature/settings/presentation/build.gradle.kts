@@ -65,6 +65,7 @@ dependencies {
     // модуль профиля
     implementation(project(":feature:profile:presentation"))
     implementation(project(":core:resources"))
+
     implementation(libs.androidx.appcompat)
 
     // Material3

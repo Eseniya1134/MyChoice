@@ -262,7 +262,7 @@ private fun ProfileHeader(
                         if (avatarUrl != null) {
                             AsyncImage(
                                 model              = avatarUrl,
-                                contentDescription = "Аватар",
+                                contentDescription = stringResource(R.string.avatar_content_description),
                                 contentScale       = ContentScale.Crop,
                                 modifier           = Modifier.fillMaxSize()
                             )
@@ -308,7 +308,7 @@ private fun ProfileHeader(
                         1.dp, MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.4f)
                     )
                 ) {
-                    Text("Редактировать", fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.edit_profile), fontSize = 15.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }

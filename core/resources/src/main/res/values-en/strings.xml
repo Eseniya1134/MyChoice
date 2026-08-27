@@ -4,6 +4,30 @@
     <!-- GLOBAL -->
     <string name="cancel">Cancel</string>
 
+    <!-- AUTH -->
+    <string name="password_label">Password</string>
+    <string name="password_hint_label">Password (minimum 6 characters)</string>
+    <string name="login_action">Log in</string>
+    <string name="register_action">Sign up</string>
+    <string name="no_account_question">Don\'t have an account?</string>
+    <string name="already_have_account_question">Already have an account?</string>
+    <string name="login_welcome_title">Welcome back</string>
+    <string name="login_welcome_subtitle">Log in to your account</string>
+    <string name="register_title">Sign up</string>
+    <string name="register_subtitle">Fill in your details to register</string>
+    <string name="first_name_label">First name</string>
+    <string name="last_name_label">Last name</string>
+    <string name="role_label_optional">Role (optional)</string>
+    <string name="role_not_specified">Not specified</string>
+    <string name="role_do_not_specify">Prefer not to say</string>
+    <!-- User roles -->
+    <string name="role_abiturient">Applicant</string>
+    <string name="role_bachelor">Bachelor</string>
+    <string name="role_master">Master</string>
+    <string name="role_postgraduate">Postgraduate</string>
+    <string name="role_teacher">Teacher</string>
+    <string name="role_admin">Admin</string>
+
     <!-- PROFILE -->
     <string name="profile_title">Profile</string>
     <string name="email_label">Email</string>
@@ -11,6 +35,7 @@
     <string name="age_label">Age</string>
     <string name="edit_profile">Edit profile</string>
     <string name="logout">Log out</string>
+    <string name="avatar_content_description">Avatar</string>
 
     <!-- SETTINGS -->
     <string name="settings_title">Settings</string>
@@ -23,4 +48,13 @@
     <string name="faq">FAQ</string>
     <string name="faq_subtitle">Frequently asked questions</string>
     <string name="choose_language">Choose language</string>
+
+    <!-- RATING -->
+    <string name="rating_screen_title">Top 10 universities</string>
+    <string name="rating_update_description">Rating updates in real time based on reviews and statistics</string>
+    <string name="rating_star_content_description">Rating</string>
+
+    <!-- SEARCH -->
+    <string name="search_screen_title">University search</string>
+    <string name="search_placeholder">Name or city...</string>
 </resources>

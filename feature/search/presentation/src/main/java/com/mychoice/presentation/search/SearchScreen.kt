@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mychoice.resources.R
 import com.mychoice.search.domain.model.University
 
 @Composable
@@ -125,7 +127,7 @@ private fun SearchHeader() {
                 .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
             Text(
-                text = "Поиск университетов",
+                text = stringResource(R.string.search_screen_title),
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 17.sp
@@ -172,7 +174,7 @@ private fun SearchField(
             TextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = { Text("Название или город...", fontSize = 14.sp) },
+                placeholder = { Text(stringResource(R.string.search_placeholder), fontSize = 14.sp) },
                 singleLine = true,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -244,7 +246,7 @@ private fun UniversityCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Star,
-                    contentDescription = "Рейтинг",
+                    contentDescription = stringResource(R.string.rating_star_content_description),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(14.dp)
                 )

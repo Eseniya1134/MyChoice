@@ -67,5 +67,6 @@ dependencies {
     implementation(project(":feature:auth:presentation"))
     implementation(project(":feature:settings:presentation"))
     implementation(project(":feature:search:presentation"))
+    implementation(project(":feature:rating:presentation"))
     implementation(project(":feature:settings"))
 }

@@ -3,8 +3,6 @@ package com.mychoice.profile.data.remote
 import retrofit2.Response
 import retrofit2.http.*
 
-// Response модели
-
 data class MyProfileResponse(
     val username: String,
     val email: String,
@@ -28,15 +26,16 @@ data class UpdateProfileRequest(
     val city: String
 )
 
-// Retrofit интерфейс
-
 interface ProfileApiService {
 
     @GET("/api/users/me")
-    suspend fun getMyProfile(): Response<MyProfileResponse>
+    suspend fun getMyProfile(
+        @Header("X-Auth-User-Id") userId: String
+    ): Response<MyProfileResponse>
 
     @PUT("/api/users/me")
     suspend fun updateProfile(
+        @Header("X-Auth-User-Id") userId: String,
         @Body request: UpdateProfileRequest
     ): Response<MyProfileResponse>
 

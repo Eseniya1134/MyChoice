@@ -1,6 +1,5 @@
 package com.mychoice.profile.di
 
-import androidx.compose.remote.creation.first
 import com.mychoice.network.TokenStorage
 import com.mychoice.profile.data.remote.ProfileApiService
 import com.mychoice.profile.data.repository.ProfileRepositoryImpl
@@ -55,6 +54,7 @@ abstract class ProfileModule {
                     chain.proceed(request)
                 }
                 .build()
+
         @Provides
         @Singleton
         fun provideProfileApiService(
