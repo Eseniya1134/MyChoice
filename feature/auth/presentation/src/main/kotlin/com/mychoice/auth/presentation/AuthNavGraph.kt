@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 
-private object AuthRoutes {
+object AuthRoutes {
     const val GRAPH    = "auth"
     const val LOGIN    = "auth/login"
     const val REGISTER = "auth/register"

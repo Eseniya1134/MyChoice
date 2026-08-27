@@ -22,9 +22,7 @@
     <string name="role_do_not_specify">Не указывать</string>
     <!-- Роли пользователей -->
     <string name="role_abiturient">Абитуриент</string>
-    <string name="role_bachelor">Бакалавр</string>
-    <string name="role_master">Магистр</string>
-    <string name="role_postgraduate">Аспирант</string>
+    <string name="role_student">Студент</string>
     <string name="role_teacher">Преподаватель</string>
     <string name="role_admin">Администратор</string>
 

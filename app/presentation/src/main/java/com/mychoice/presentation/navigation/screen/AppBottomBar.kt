@@ -9,12 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Article
-import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material.icons.filled.Forum
-import androidx.compose.material.icons.filled.Leaderboard
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,9 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.games.leaderboard.Leaderboard
 import com.mychoice.presentation.navigation.model.NavigationBottomModel
-
 
 @Composable
 fun AppBottomBar(navController: NavHostController) {
@@ -54,8 +47,6 @@ fun AppBottomBar(navController: NavHostController) {
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
-
-        //  ФОН НАВИГАЦИИ (отдельный слой)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -65,7 +56,6 @@ fun AppBottomBar(navController: NavHostController) {
                 .background(barColor)
         )
 
-        // ИКОНКИ (поверх)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,8 +101,6 @@ fun AppBottomBar(navController: NavHostController) {
                         modifier = Modifier.size(26.dp)
                     )
                 }
-
-
             }
         }
     }

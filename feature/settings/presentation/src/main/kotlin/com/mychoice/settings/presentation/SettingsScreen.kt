@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
@@ -26,22 +27,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.mychoice.resources.R
 import android.util.Log
-
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
     onNavigateToProfile: () -> Unit,
     onNavigateToEditProfile: () -> Unit,
-    viewModel: SettingsViewModel = viewModel()
+    onLogout: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(uiState.selectedLanguage) {
         Log.d("LANG_DEBUG", "UI LANGUAGE NOW: ${uiState.selectedLanguage}")
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.logoutEvent.collect {
+            onLogout()
+        }
     }
 
     if (uiState.showLanguageDialog) {
@@ -52,13 +61,47 @@ fun SettingsScreen(
         )
     }
 
+    if (uiState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    if (uiState.errorMessage != null) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Ошибка: ${uiState.errorMessage}",
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.refreshProfile()
+                    }
+                }
+            ) {
+                Text("Повторить")
+            }
+        }
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         ProfileHeader(
-            username = uiState.username,
+            username = "${uiState.firstName} ${uiState.lastName}".ifEmpty { uiState.username },
             handle = uiState.handle,
             avatarUrl = uiState.avatarUrl,
             onHeaderClick = onNavigateToProfile,
@@ -72,7 +115,6 @@ fun SettingsScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
             SettingsToggleItem(
                 icon = if (uiState.isLightTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
                 iconTint = MaterialTheme.colorScheme.primary,
@@ -114,7 +156,7 @@ fun SettingsScreen(
             )
 
             SettingsNavigationItem(
-                icon = Icons.Default.HelpOutline,
+                icon = Icons.AutoMirrored.Filled.HelpOutline,
                 iconTint = MaterialTheme.colorScheme.tertiary,
                 title = stringResource(R.string.faq),
                 subtitle = stringResource(R.string.faq_subtitle),
@@ -132,7 +174,6 @@ fun SettingsScreen(
     }
 }
 
-// Диалог выбора языка
 @Composable
 private fun LanguagePickerDialog(
     currentLanguage: String,
@@ -204,8 +245,6 @@ private fun LanguagePickerDialog(
     )
 }
 
-// Шапка
-
 @Composable
 private fun ProfileHeader(
     username: String,
@@ -236,8 +275,8 @@ private fun ProfileHeader(
                 .background(
                     brush = Brush.linearGradient(
                         colors = gradientColors,
-                        start  = androidx.compose.ui.geometry.Offset(0f, 0f),
-                        end    = androidx.compose.ui.geometry.Offset(
+                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                        end = androidx.compose.ui.geometry.Offset(
                             Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY
                         )
                     )
@@ -297,7 +336,9 @@ private fun ProfileHeader(
 
                 Button(
                     onClick   = { onEditProfileClick() },
-                    modifier  = Modifier.fillMaxWidth().height(44.dp),
+                    modifier  = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp),
                     shape     = RoundedCornerShape(22.dp),
                     colors    = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
@@ -314,8 +355,6 @@ private fun ProfileHeader(
         }
     }
 }
-
-// Тоггл с иконкой
 
 @Composable
 private fun SettingsToggleItem(
@@ -337,7 +376,6 @@ private fun SettingsToggleItem(
                 .padding(horizontal = 16.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Иконка в цветном кружке
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -373,8 +411,6 @@ private fun SettingsToggleItem(
     }
 }
 
-// Пункт со стрелкой и иконкой
-
 @Composable
 private fun SettingsNavigationItem(
     icon: ImageVector,
@@ -398,7 +434,6 @@ private fun SettingsNavigationItem(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Иконка в цветном кружке
             Box(
                 modifier = Modifier
                     .size(36.dp)
@@ -444,7 +479,8 @@ private fun SettingsNavigationItem(
 @Composable
 fun SettingsPreview() {
     SettingsScreen(
-        onNavigateToProfile     = {},
-        onNavigateToEditProfile = {}
+        onNavigateToProfile = {},
+        onNavigateToEditProfile = {},
+        onLogout = {}
     )
 }

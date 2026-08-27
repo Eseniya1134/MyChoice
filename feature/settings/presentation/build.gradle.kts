@@ -64,7 +64,11 @@ dependencies {
 
     // модуль профиля
     implementation(project(":feature:profile:presentation"))
+    implementation(project(":feature:profile:domain"))
+    implementation(project(":feature:auth:presentation"))
+    implementation(project(":feature:auth"))
     implementation(project(":core:resources"))
+    implementation(project(":core:network"))
 
     implementation(libs.androidx.appcompat)
 

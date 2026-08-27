@@ -34,9 +34,7 @@ enum class UserRole(
     val apiValue: String
 ) {
     ABITURIENT(R.string.role_abiturient, "ABITURIENT"),
-    BACHELOR(R.string.role_bachelor, "BACHELOR"),
-    MASTER(R.string.role_master, "MASTER"),
-    POSTGRADUATE(R.string.role_postgraduate, "POSTGRADUATE"),
+    STUDENT(R.string.role_student, "STUDENT"),
     TEACHER(R.string.role_teacher, "TEACHER"),
     ADMIN(R.string.role_admin, "ADMIN")
 }

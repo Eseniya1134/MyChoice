@@ -390,7 +390,6 @@ private fun RoleDropdownField(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        // ✅ ИСПРАВЛЕНО: используем context.getString()
                         text = selectedRole?.let {
                             context.getString(it.displayNameRes)
                         } ?: stringResource(R.string.role_not_specified),
@@ -427,13 +426,10 @@ private fun RoleDropdownField(
             // Список ролей (без ADMIN)
             listOf(
                 UserRole.ABITURIENT,
-                UserRole.BACHELOR,
-                UserRole.MASTER,
-                UserRole.POSTGRADUATE,
+                UserRole.STUDENT,
                 UserRole.TEACHER
             ).forEach { role ->
                 DropdownMenuItem(
-                    // ✅ ИСПРАВЛЕНО: используем context.getString()
                     text = { Text(context.getString(role.displayNameRes)) },
                     onClick = {
                         onRoleSelected(role)
